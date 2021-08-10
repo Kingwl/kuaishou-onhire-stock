@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <div class="container">
+    <div class="major item">
+      <span>今日价格</span>
+      <span class="major-price">#{current.avg}</span>
+      <span>#{currency}</span>
+    </div>
+    <div class="minor">
+      From #{current.from} To #{current.to}
+    </div>
+    <div class="minor">
+      <span>明日预估价格</span>
+      <span class="minor-price">#{next.avg}</span>
+      <span>#{currency}</span>
+    </div>
+  </div>
+</body>
+include style-and-script.html
+</html>

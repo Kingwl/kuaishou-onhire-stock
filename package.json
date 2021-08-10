@@ -1,0 +1,26 @@
+{
+  "name": "kuaishou-onhire-stock",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/fs-extra": "^9.0.12",
+    "@types/lodash": "^4.14.172",
+    "@types/node": "^16.4.13",
+    "@types/pug": "^2.0.5",
+    "axios": "^0.21.1",
+    "fs-extra": "^10.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "prettier": "^2.3.2",
+    "pug": "^3.0.2",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:template": "node ./dist/index.js",
+    "build:all": "yarn build && yarn build:template",
+    "lint": "prettier -c --config ./prettier.config.js ./src/**/*.{ts,tsx}",
+    "prettier": "yarn lint --write"
+  }
+}
