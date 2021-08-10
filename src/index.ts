@@ -8,12 +8,13 @@ const distPath = path.resolve(__dirname, "../out");
 const distFilePath = path.join(distPath, "index.html");
 
 async function main() {
-    const { current, next, currency } = await fetchAndCalc();
+    const { current, next, currency, now } = await fetchAndCalc();
 
     const htmlContent = pug.renderFile(templatePath, {
         current,
         next,
-        currency
+        currency,
+        now
     });
 
     await fs.ensureDir(distPath);

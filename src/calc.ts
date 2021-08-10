@@ -3,7 +3,7 @@ import * as moment from "moment";
 import * as lodash from "lodash";
 
 const code = "1024.HK";
-const format = "YYYY-MM-DD HH:mm:ss";
+const format = "YYYY-MM-DD HH:mm";
 
 function first<T>(items: T[] | undefined): T {
     if (!items?.length) {
@@ -52,6 +52,7 @@ export interface IResult {
     current: IStockData;
     next: IStockData;
     currency: string;
+    now: string;
 }
 
 export async function fetchAndCalc(): Promise<IResult> {
@@ -80,9 +81,12 @@ export async function fetchAndCalc(): Promise<IResult> {
         tomorrow
     );
 
+    const now = moment().format(format);
+
     return {
         current,
         next,
-        currency: stock.meta.currency
+        currency: stock.meta.currency,
+        now
     };
 }
