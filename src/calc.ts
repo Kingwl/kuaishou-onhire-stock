@@ -1,9 +1,11 @@
 import { getHistory } from "./api";
 import * as moment from "moment";
+import "moment-timezone";
 import * as lodash from "lodash";
 
 const code = "1024.HK";
 const format = "YYYY-MM-DD HH:mm";
+const timezone = "Asia/Shanghai";
 
 function first<T>(items: T[] | undefined): T {
     if (!items?.length) {
@@ -42,8 +44,8 @@ function getDataFromRange(
     const [from] = first(daysInLast15Days);
     const [to] = last(daysInLast15Days);
 
-    const fromText = moment.unix(from).format(format);
-    const toText = moment.unix(to).format(format);
+    const fromText = moment.unix(from).tz(timezone).format(format);
+    const toText = moment.unix(to).tz(timezone).format(format);
 
     return { avg, from: fromText, to: toText };
 }
@@ -69,7 +71,7 @@ export async function fetchAndCalc(): Promise<IResult> {
         (a, b) => [a, b] as const
     );
 
-    const today = moment().startOf("day");
+    const today = moment().tz(timezone).startOf("day");
     const tomorrow = today.clone().add(1, "day");
     const last15DaysToToday = today.clone().subtract(15, "days");
     const last15DaysToTomorrow = tomorrow.clone().subtract(15, "days");
@@ -81,7 +83,7 @@ export async function fetchAndCalc(): Promise<IResult> {
         tomorrow
     );
 
-    const now = moment().format(format);
+    const now = moment().tz(timezone).format(format);
 
     return {
         current,
