@@ -9,6 +9,7 @@ interface IArgs {
 function getAPIUrl(args: IArgs) {
     const { code, range = "1mo", interval = "1d" } = args;
     const api = `https://query1.finance.yahoo.com/v8/finance/chart/${code}?range=${range}&region=US&lang=zh-CN&includePrePost=false&interval=${interval}&useYfid=true`;
+    console.log(api);
     return api;
 }
 

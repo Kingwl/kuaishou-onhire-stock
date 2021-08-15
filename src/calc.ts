@@ -5,6 +5,7 @@ import * as lodash from "lodash";
 
 const code = "1024.HK";
 const format = "YYYY-MM-DD HH:mm";
+const dateFormat = "YYYY-MM-DD";
 const timezone = "Asia/Shanghai";
 
 function first<T>(items: T[] | undefined): T {
@@ -23,6 +24,15 @@ function last<T>(items: T[] | undefined): T {
     return items[items.length - 1];
 }
 
+function assertDef<T>(
+    v: T | null | undefined,
+    message: string
+): asserts v is T {
+    if (v === undefined || v === null) {
+        throw new Error(message);
+    }
+}
+
 interface IStockData {
     avg: string;
     from: string;
@@ -34,19 +44,45 @@ function getDataFromRange(
     start: moment.Moment,
     end: moment.Moment
 ): IStockData {
-    const daysInLast15Days = values.filter(([time]) => {
-        const value = moment.unix(time);
-        return start < value && value < end;
-    });
+    const date2ValueMap = new Map(
+        values.map(([time, value]) => {
+            const date = moment.unix(time).tz(timezone).format(dateFormat);
+            return [date, value];
+        })
+    );
 
-    const sum = lodash.sumBy(daysInLast15Days, ([, value]) => value);
-    const avg = (sum / daysInLast15Days.length).toFixed(2);
-    const [from] = first(daysInLast15Days);
-    const [to] = last(daysInLast15Days);
+    const [startValueTime] = first(values);
+    const [endValueTime] = last(values);
+    const startValueMoment = moment.unix(startValueTime).tz(timezone);
+    const endValueMoment = moment.unix(endValueTime).tz(timezone);
+    const loopStart =
+        start < startValueMoment ? start.clone() : startValueMoment;
+    const loopEnd = end > endValueMoment ? end.clone() : endValueMoment;
 
-    const fromText = moment.unix(from).tz(timezone).format(format);
-    const toText = moment.unix(to).tz(timezone).format(format);
+    let lastValue: number | undefined;
+    const natureDayValuesMap = new Map<string, number>();
 
+    for (
+        let cur = loopStart.clone().startOf("day");
+        cur <= loopEnd.clone().startOf("day");
+        cur.add(1, "day")
+    ) {
+        const date = cur.format(dateFormat);
+        const value = date2ValueMap.get(date) ?? lastValue;
+        lastValue = value;
+
+        if (start <= cur && cur < end) {
+            assertDef(value, "Must have value");
+            natureDayValuesMap.set(date, value);
+        }
+    }
+
+    const valuesInLast15Days = Array.from(natureDayValuesMap.values());
+    const sum = lodash.sumBy(valuesInLast15Days);
+    const avg = (sum / valuesInLast15Days.length).toFixed(2);
+
+    const fromText = start.clone().format(format);
+    const toText = end.clone().subtract(1, "second").format(format);
     return { avg, from: fromText, to: toText };
 }
 
