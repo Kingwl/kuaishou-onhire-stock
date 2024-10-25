@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div class="container">
+<div class="major item">
+<span>今日价格</span>
+<span class="major-price">48.05</span>
+<span>HKD</span>
+</div>
+<div class="minor"><From>2024-10-10 00:00 To 2024-10-24 23:59</From></div>
+<div class="minor">
+<span>明日预估价格</span>
+<span class="minor-price">47.68</span>
+<span>HKD</span>
+</div>
+<div class="minor">
+<span>( 更新于 2024-10-25 08:52 )</span>
+</div>
+</div>
+</body><style>
+    html {
+        font-family: arial, sans-serif;
+    }
+
+    body {
+        height: 100vh;
+        color: white;
+        background: #ff6600;
+    }
+
+    .container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .major-price {
+        font-size: 2rem;
+    }
+
+    .minor-price {
+        font-size: .8rem;
+    }
+
+    .major {
+        font-size: 1rem;
+        margin-bottom: .8rem;
+    }
+
+    .minor {
+        color: #DcDfE6;
+        align-self: flex-end;
+        font-size: .5rem;
+        margin-right: 1rem;
+    }
+</style>
+<script>
+    function resize() {
+        const width = document.documentElement.clientWidth;
+        document.documentElement.style.fontSize = 24 * (width / 375) + 'px';
+    }
+
+    function setup() {
+        const resizeEvent = 'orientationchange' in window ? 'orientationchange' : 'resize';
+        window.addEventListener(resizeEvent, resize, false);
+        document.addEventListener('DOMContentLoaded', resize, false);
+    }
+
+    setup();
+</script></html>
